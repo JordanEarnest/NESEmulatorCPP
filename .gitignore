@@ -1,0 +1,4 @@
+main.o
+bus.o
+cpu.o
+ppu.o
