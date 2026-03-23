@@ -72,7 +72,7 @@ uint8_t APU::readRegister(uint16_t addr) {
 
         case ADDR_TRI_LINEAR: return TRI_LINEAR; break;
         case ADDR_TRI_LO:     return TRI_LO;     break;
-        case ADDR_TRI_HI:   return TRI_HI;     break;
+        case ADDR_TRI_HI:     return TRI_HI;     break;
 
         case ADDR_NOISE_VOL:  return NOISE_VOL;  break;
         case ADDR_NOISE_LO:   return NOISE_LO;   break;
@@ -119,4 +119,8 @@ void APU::writeRegister(uint16_t addr, uint8_t val) {
                                
         case ADDR_JOY2:       JOY2 = val;       break;
     } 
+}
+
+void APU::clock() {
+    return;
 }

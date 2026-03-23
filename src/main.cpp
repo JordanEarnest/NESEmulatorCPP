@@ -3,9 +3,13 @@
 
 int main() {
     Bus bus;
-    bus.power();
-    uint32_t cycles = bus.clock();
-    std::cout << cycles << " cycles" << std::endl;
-    return 0;
 
+    // Load ROM
+    if (!bus.getCartridge().loadNESFile("supermariobros.nes")) 
+        return -1;
+    //bus.getCartridge().print();
+    bus.power();
+    while (true)
+        bus.clock();
+    return 0;
 }

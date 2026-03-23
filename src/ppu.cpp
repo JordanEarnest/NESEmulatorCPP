@@ -22,37 +22,40 @@ void PPU::reset() {
     PPUDATA = 0x00;
 }
 
-uint8_t PPU::readRegister(uint16_t addr) {    
-    uint16_t mirroredAddr = (addr & 0x0007) + 0x2000;        
-    switch (mirroredAddr) {
-        case ADDR_PPUCTRL:   return PPUCTRL;   break;
-        case ADDR_PPUMASK:   return PPUMASK;   break;
-        case ADDR_PPUSTATUS: return PPUSTATUS; break;
-        case ADDR_OAMADDR:   return OAMADDR;   break;
-        case ADDR_PPUSCROLL: return PPUSCROLL; break;
-        case ADDR_PPUADDR:   return PPUADDR;   break;
-        case ADDR_PPUDATA:   return PPUDATA;   break;
-        case ADDR_OAMDMA:    return OAMDMA;    break;
-        default:             return 0xFF;      break;
+uint8_t PPU::readRegister(uint16_t addr) {          
+    switch (addr) { // addr already been sanitized in bus with mirroring
+        case ADDR_PPUCTRL:   return PPUCTRL;      break;
+        case ADDR_PPUMASK:   return PPUMASK;      break;
+        case ADDR_PPUSTATUS: return PPUSTATUS;    break;
+        case ADDR_OAMADDR:   return OAMADDR;      break;
+        case ADDR_OAMDATA:   return oam[OAMADDR]; break;
+        case ADDR_PPUSCROLL: return PPUSCROLL;    break;
+        case ADDR_PPUADDR:   return PPUADDR;      break;
+        case ADDR_PPUDATA:   return PPUDATA;      break;
+        default:             return 0xFF;         break;
     }
 }
 
 void PPU::writeRegister(uint16_t addr, uint8_t val) {
-    uint16_t mirroredAddr = (addr & 0x007) + 0x2000;
-    switch (mirroredAddr) {
+    switch (addr) { // addr already been sanitized in bus with mirroring
         case ADDR_PPUCTRL:   PPUCTRL   = val; break;
         case ADDR_PPUMASK:   PPUMASK   = val; break;
-        case ADDR_PPUSTATUS: PPUSTATUS = val; break;
-        case ADDR_OAMADDR:   OAMADDR   = val; break;
-        case ADDR_OAMDATA:   OAMDATA   = val; break;
+        case ADDR_PPUSTATUS: /*readonly*/     break;
+        case ADDR_OAMADDR: {
+            OAMADDR = val;
+            break;
+        }
+        case ADDR_OAMDATA: {
+            oam[OAMADDR] = val;
+            OAMADDR++; // auto-increment is a hardware behavior
+            break;
+        }
         case ADDR_PPUSCROLL: PPUSCROLL = val; break;
         case ADDR_PPUADDR:   PPUADDR   = val; break;
         case ADDR_PPUDATA:   PPUDATA   = val; break;
-        case ADDR_OAMDMA:    OAMDMA    = val; break;
    }
 }
 
-
-
-
-
+void PPU::clock() {
+    return;
+}

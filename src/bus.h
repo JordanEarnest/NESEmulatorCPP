@@ -3,15 +3,21 @@
 #include "cpu.h"
 #include "ppu.h"
 #include "apu.h"
+#include "cartridge.h"
 
 class Bus {
     private:
-       uint8_t ram[0x800] = {}; // 2048 bytes of ram
+        uint8_t ram[0x800] = {}; // 2048 bytes of ram
 
-       CPU cpu;
-       PPU ppu;
-       APU apu;
+        Cartridge cartridge;
 
+        CPU cpu;
+        PPU ppu;
+        APU apu;
+    private:
+        void doOAMDMA(uint8_t prefix);
+    public:
+        
     public:
         Bus();
         
@@ -21,5 +27,7 @@ class Bus {
         void power();
         void reset();
 
-        uint32_t clock();
+        void clock();
+
+        Cartridge& getCartridge();
 };
